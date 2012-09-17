@@ -17,14 +17,19 @@ function readUrl()
 
 function help()
 {
-    $msg  = "\t\tCommands:\n";
-    $msg .= "\t\thelp:      This help\n";
-    $msg .= "\t\tapplet:    Install an applet\n";
-    $msg .= "\t\ttheme:     Install a theme\n";
-    $msg .= "\t\textension: Install an extension\n";
-    $msg .= "\t\tcredits:   Credits\n";
-    $msg .= "\t\texit:      Exit\n";
-    echo $msg;
+    $msg  = array("\033[32m",
+
+        "Commands:",
+        "help:      This help",
+        "applet:    Install an applet",
+        "theme:     Install a theme",
+        "extension: Install an extension",
+        "credits:   Credits",
+        "exit:      Exit",
+
+    "\033[37m\r\n");
+
+    echo join( "\n\t\t" , $msg );
     switcher();
 }
 $home = $_SERVER['HOME'];

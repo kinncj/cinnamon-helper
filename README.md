@@ -15,7 +15,7 @@ Usage
  
  To get it checkout this repository or type the following command at your console:
  
-    wget -L https://raw.github.com/kinncj/cinnamon-helper/master/cinnamon-helper > cinnamon-helper && chmod +x cinnamon-helper
+    wget -L https://raw.github.com/kinncj/cinnamon-helper/master/cinnamon-helper && chmod +x cinnamon-helper && ./cinnamon-helper
   
  To run cinnamon-helper just try:
   

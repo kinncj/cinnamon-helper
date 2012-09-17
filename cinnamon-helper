@@ -1,0 +1,100 @@
+#!/usr/bin/env php
+<?php
+function readOption()
+{
+    $option = readline ("cinnamon-helper :> ");
+    readline_add_history($option);
+    return $option;
+}
+
+function readUrl()
+{
+    echo "Type the url\n";
+    return readline ("cinnamon-helper :>");
+}
+
+
+
+function help()
+{
+    $msg  = "\t\tCommands:\n";
+    $msg .= "\t\thelp:      This help\n";
+    $msg .= "\t\tapplet:    Install an applet\n";
+    $msg .= "\t\ttheme:     Install a theme\n";
+    $msg .= "\t\textension: Install an extension\n";
+    $msg .= "\t\tcredits:   Credits\n";
+    $msg .= "\t\texit:      Exit\n";
+    echo $msg;
+    switcher();
+}
+$home = $_SERVER['HOME'];
+define('CINNAMON_DIR', "{$home}/.local/share/cinnamon/");
+define('HELPER_DIR', CINNAMON_DIR."helper/");
+
+function getFile($url, $separator)
+{
+    $filename = explode($separator, $url);
+
+    $return = shell_exec("mkdir -p ".HELPER_DIR."{$separator} -m 777");
+    
+    $file = HELPER_DIR.$separator.$filename[1];
+    
+    $realFile = file_get_contents($url);
+
+    file_put_contents($file, $realFile);
+    $return           = new stdClass;
+    $return->name     = substr($filename[1], 1);
+    $return->basename = substr(str_replace('.zip', '', $filename[1]), 1);
+    $return->url      = $file;
+
+    return $return;
+}
+
+function save($url, $separator, $home)
+{
+    echo ("[starting]\n");
+    $file = getFile($url, $separator);
+
+    $command = "cd ".$home." && unzip '{$file->url}'";
+    
+    exec($command);
+    $separator = strtoupper(substr($separator, 0, -1));
+    echo ("[done] {$separator} saved at {$home}\n");
+    switcher();
+}
+
+$home   = "";
+$separator = "";
+function switcher(){
+    global $home;
+    global $separator;
+    switch(strtolower(readOption())) {
+        case 'applet':
+            $separator = "applets";
+            $home      = CINNAMON_DIR."{$separator}/";
+            break;
+        case 'theme':
+            $separator = "themes";
+            $home      = "~/.{$separator}/";
+            break;
+        case 'extension':
+            $separator = "extensions";
+            $home      = CINNAMON_DIR."{$separator}/";
+            break;
+        case 'credits':
+            echo ("Kinn Coelho Julião <kinncj@gmail.com>\n");
+            switcher();
+            break;
+        case 'exit':
+            readline_clear_history();
+            die ("Thanks for using cinnamon-helper!\n");
+            break;
+        default:
+            help();
+            break;
+    }
+    
+    $url = readUrl();
+    save($url, $separator, $home);
+}
+switcher();
